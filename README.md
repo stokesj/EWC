@@ -8,7 +8,7 @@ A TensorFlow implementation of elastic weight consolidation as presented in [Ove
 
 Perform hyperparameter search over learning rates for the permuted MNIST task (fisher multiplier locked at inverse learning rate):
 ```
-python -u main.py --hidden_layers 2 --hidden_units 800 --num_tasks 5 --trials 50 --epochs 100
+python -u main.py --hidden_layers 2 --hidden_units 800 --num_perms 5 --trials 50 --epochs 100
 ```
 
 ### Results
