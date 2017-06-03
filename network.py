@@ -6,9 +6,6 @@ class Network(object):
      prediction model and Fisher diagonal."""
 
     def __init__(self, num_features, num_class, fc_hidden_units, apply_dropout, ewc_batch_size=100, ewc_batches=550):
-
-        # tf.reset_default_graph()
-
         self.num_features = num_features
         self.num_class = num_class
         self.fc_units = fc_hidden_units

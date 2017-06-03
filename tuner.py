@@ -1,9 +1,11 @@
 import numpy as np
 import Queue
-from numpy.random import RandomState
+
 from copy import deepcopy
-from tensorflow.contrib.learn.python.learn.datasets.mnist import read_data_sets
 from classifiers import Classifier
+from numpy.random import RandomState
+from tensorflow.contrib.learn.python.learn.datasets.mnist import read_data_sets
+
 
 PRNG = RandomState(12345)
 MINI_BATCH_SIZE = 250
@@ -20,7 +22,9 @@ class HyperparameterTuner(object):
         self.trial_learning_rates = [PRNG.uniform(1e-4, 1e-3) for _ in range(0, trials)]
         self.best_parameters = []
         self.sess = sess
-        self.classifier = Classifier(num_class=10, num_features=784, fc_hidden_units=[hidden_units for _ in range(hidden_layers)],
+        self.classifier = Classifier(num_class=10,
+                                     num_features=784,
+                                     fc_hidden_units=[hidden_units for _ in range(hidden_layers)],
                                      apply_dropout=True)
 
     def search(self):
@@ -34,7 +38,9 @@ class HyperparameterTuner(object):
     def evaluate(self):
         accuracies = []
         for parameters in self.best_parameters:
-            accuracy = self.classifier.test(sess=self.sess, model_name=parameters[1], batch_xs=self.task_list[0].test.images,
+            accuracy = self.classifier.test(sess=self.sess,
+                                            model_name=parameters[1],
+                                            batch_xs=self.task_list[0].test.images,
                                             batch_ys=self.task_list[0].test.labels)
             accuracies.append(accuracy)
         print accuracies
@@ -44,10 +50,19 @@ class HyperparameterTuner(object):
         dataset_train = self.task_list[t].train
         dataset_lagged = self.task_list[t - 1] if t > 0 else None
         model_init_name = self.best_parameters[t - 1][1] if t > 0 else None
-        self.classifier.train(sess=self.sess, model_name=model_name, model_init_name=model_init_name, dataset=dataset_train,
-                              dataset_lagged=dataset_lagged, num_updates=(55000/MINI_BATCH_SIZE)*self.epochs,
-                              mini_batch_size=MINI_BATCH_SIZE, log_frequency=LOG_FREQUENCY, fisher_multiplier=1.0/lr, learning_rate=lr)
-        accuracy = self.classifier.test(sess=self.sess, model_name=model_name, batch_xs=self.task_list[0].validation.images,
+        self.classifier.train(sess=self.sess,
+                              model_name=model_name,
+                              model_init_name=model_init_name,
+                              dataset=dataset_train,
+                              dataset_lagged=dataset_lagged,
+                              num_updates=(55000/MINI_BATCH_SIZE)*self.epochs,
+                              mini_batch_size=MINI_BATCH_SIZE,
+                              log_frequency=LOG_FREQUENCY,
+                              fisher_multiplier=1.0/lr,
+                              learning_rate=lr)
+        accuracy = self.classifier.test(sess=self.sess,
+                                        model_name=model_name,
+                                        batch_xs=self.task_list[0].validation.images,
                                         batch_ys=self.task_list[0].validation.labels)
         queue.put((-accuracy, model_name))
 

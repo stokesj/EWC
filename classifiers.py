@@ -1,14 +1,14 @@
-from network import Network
-import tensorflow as tf
 import numpy as np
 import os
-np.set_printoptions(threshold=10)
+import tensorflow as tf
+
+from network import Network
 
 
 class Classifier(Network):
     """Supplies fully connected prediction model with training loop which absorbs minibatches and updates weights."""
 
-    def __init__(self, checkpoint_path = 'logs/checkpoints/', summaries_path='logs/summaries/', *args, **kwargs):
+    def __init__(self, checkpoint_path='logs/checkpoints/', summaries_path='logs/summaries/', *args, **kwargs):
         super(Classifier, self).__init__(*args, **kwargs)
         self.checkpoint_path = checkpoint_path
         self. summaries_path = summaries_path
