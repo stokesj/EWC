@@ -20,7 +20,7 @@ def main():
         tuner = HyperparameterTuner(sess=sess, hidden_layers=args.hidden_layers, hidden_units=args.hidden_units,
                                     num_perms=args.num_perms, trials=args.trials, epochs=args.epochs)
         tuner.search()
-        print tuner.best_parameters
+        print(tuner.best_parameters)
 
 if __name__ == "__main__":
     main()

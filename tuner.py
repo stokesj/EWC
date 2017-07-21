@@ -1,9 +1,9 @@
 import numpy as np
-import Queue
 
 from copy import deepcopy
 from classifiers import Classifier
 from numpy.random import RandomState
+from queue import PriorityQueue
 from tensorflow.contrib.learn.python.learn.datasets.mnist import read_data_sets
 
 
@@ -29,7 +29,7 @@ class HyperparameterTuner(object):
 
     def search(self):
         for t in range(0, self.num_perms):
-            queue = Queue.PriorityQueue()
+            queue = PriorityQueue()
             for learning_rate in self.trial_learning_rates:
                 self.train_on_task(t, learning_rate, queue)
             self.best_parameters.append(queue.get())
@@ -43,7 +43,7 @@ class HyperparameterTuner(object):
                                             batch_xs=self.task_list[0].test.images,
                                             batch_ys=self.task_list[0].test.labels)
             accuracies.append(accuracy)
-        print accuracies
+        print(accuracies)
 
     def train_on_task(self, t, lr, queue):
         model_name = self.file_name(lr, t)
@@ -55,7 +55,7 @@ class HyperparameterTuner(object):
                               model_init_name=model_init_name,
                               dataset=dataset_train,
                               dataset_lagged=dataset_lagged,
-                              num_updates=(55000/MINI_BATCH_SIZE)*self.epochs,
+                              num_updates=(55000//MINI_BATCH_SIZE)*self.epochs,
                               mini_batch_size=MINI_BATCH_SIZE,
                               log_frequency=LOG_FREQUENCY,
                               fisher_multiplier=1.0/lr,

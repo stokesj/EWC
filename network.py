@@ -50,7 +50,7 @@ class Network(object):
     def fc_feedforward(self, h, biases, weights, apply_dropout):
         if apply_dropout:
             h = tf.nn.dropout(h, self.keep_prob_input)
-        for (w, b) in zip(weights, biases)[:-1]:
+        for (w, b) in list(zip(weights, biases))[:-1]:
             h = self.create_fc_layer(h, w, b)
             if apply_dropout:
                 h = tf.nn.dropout(h, self.keep_prob_hidden)

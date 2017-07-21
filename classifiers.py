@@ -1,4 +1,3 @@
-import numpy as np
 import os
 import tensorflow as tf
 
@@ -23,13 +22,13 @@ class Classifier(Network):
 
     def train(self, sess, model_name, model_init_name, dataset, num_updates, mini_batch_size, fisher_multiplier,
               learning_rate, log_frequency=None, dataset_lagged=None):  # pass previous dataset as convenience
-        print 'training ' + model_name + ' with weights initialized at ' + str(model_init_name)
+        print('training ' + model_name + ' with weights initialized at ' + str(model_init_name))
         self.prepare_for_training(sess, model_name, model_init_name, fisher_multiplier, learning_rate)
         for i in range(num_updates):
             self.minibatch_sgd(sess, i, dataset, mini_batch_size, log_frequency)
         self.update_fisher_full_batch(sess, dataset)
         self.save_weights(i, sess, model_name)
-        print 'finished training ' + model_name
+        print('finished training ' + model_name)
 
     def test(self, sess, model_name, batch_xs, batch_ys):
         self.restore_model(sess, model_name)
@@ -49,7 +48,6 @@ class Classifier(Network):
             feed_dict.update({self.keep_prob_input: 1.0, self.keep_prob_hidden: 1.0})
         summary, accuracy = sess.run([self.merged, self.accuracy], feed_dict=feed_dict)
         self.writer.add_summary(summary, iteration)
-        # print 'accuracy on iteration', iteration, 'is', accuracy
 
     def update_fisher_full_batch(self, sess, dataset):
         dataset._index_in_epoch = 0  # ensures that all training examples are included without repetitions
@@ -94,7 +92,7 @@ class Classifier(Network):
             os.makedirs(self.checkpoint_path)
         self.saver.save(sess=sess, save_path=self.checkpoint_path + model_name + '.ckpt', global_step=time_step,
                         latest_filename=model_name)
-        print 'saving model ' + model_name + ' at time step ' + str(time_step)
+        print('saving model ' + model_name + ' at time step ' + str(time_step))
 
     def restore_model(self, sess, model_name):
         ckpt = tf.train.get_checkpoint_state(checkpoint_dir=self.checkpoint_path, latest_filename=model_name)
